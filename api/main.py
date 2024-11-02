@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 # Create a asynchronous server gateway interface
 app = FastAPI()
 
+
 @app.get("/")
 async def root() -> JSONResponse:
     resp: dict = {"state" : "Server up running!"}
