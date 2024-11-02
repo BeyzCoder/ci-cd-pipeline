@@ -1,7 +1,7 @@
 name: CI/CD Pipeline.
 
 on:
-	# Trigger the workflow on push
+  # Trigger the workflow on push
   push:
     branches:
 			# Push events on master branch
