@@ -1,8 +1,13 @@
 from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 
+from api.routes import data_collect
+
 # Create a asynchronous server gateway interface
 app = FastAPI()
+
+# Connect the routes
+app.include_router(data_collect.router, prefix="/data-collect")
 
 
 @app.get("/")
