@@ -1,5 +1,6 @@
 from api.services.requests import fetch
 from api.scripts.yahoo_data import parse_financial, extract_value_data
+from api.scripts.macrotrend_data import parse, cleanse
 from api.models.request_model import RequestComponent
 
 
@@ -9,7 +10,7 @@ def scrape_statement(symbol: str, website: str) -> dict:
     """
 
     if website == "yahoo":
-        url = "https://ca.finance.yahoo.com/quote/{}/financials?p={}".format(symbol, symbol)
+        url = "https://ca.finance.yahoo.com/quote/{}/financials/".format(symbol)
         headers = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"}
         params = {}
         packet = RequestComponent(url=url, headers=headers, params=params)
@@ -17,6 +18,18 @@ def scrape_statement(symbol: str, website: str) -> dict:
         html_text = fetch(packet)
         unstructured_object = parse_financial(html_text)
         formatted_object = extract_value_data(unstructured_object)
+
+        return formatted_object
+
+    elif website == "macrotrend":
+        url = "https://www.macrotrends.net/stocks/charts/{}//financial-statements".format(symbol)
+        headers = {"User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"}
+        params = {}
+        packet = RequestComponent(url=url, headers=headers, params=params)
+
+        html_text = fetch(packet)
+        raw_data = parse(html_text)
+        formatted_object = cleanse(raw_data)
 
         return formatted_object
 

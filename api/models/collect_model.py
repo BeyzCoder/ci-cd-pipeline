@@ -5,6 +5,7 @@ from enum import Enum
 
 class FinanceWebsite(str, Enum):
     yahoo = "yahoo"
+    macrotrend = "macrotrend"
 
 
 class ScrapeParams(BaseModel):

@@ -10,4 +10,5 @@ router = APIRouter()
 @router.post("/v1/scrape-statement/")
 async def collect(scrape: ScrapeParams) -> JSONResponse:
     statements = scrape_statement(**scrape.__dict__)
+    # statements = scrape.__dict__
     return JSONResponse(content=statements, status_code=status.HTTP_200_OK, media_type="application/json")
