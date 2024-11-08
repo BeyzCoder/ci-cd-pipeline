@@ -15,38 +15,18 @@ jobs:
       # Check out repo so out workflow can access it
       - uses: actions/checkout@v2
 
-      # Set up python
-      - name: Set up Python
-        # This action sets up a python environment for use in actions
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.10.13
+      # Build and run the services with Docker Compose
+      - name: Build and Run with Docker Compose
+        run: docker-compose -f docker-compose.yml up --build --abort-on-container-exit
 
-      # Install python virtual ENV
-      - name: Install Python Virtual ENV
-        run: pip3 install virtualenv
+      # Lint production code with flake8 in api-prod
+      - name: Lint Production Code
+        run: docker-compose run --rm api-prod flake8
 
-      # Set up virtual ENV
-      # caching dependencies to speed up workflow
-      - name: Virtual ENV
-        uses: actions/cache@v2
-        # Name for referring later
-        id: cache-venv
-        with:
-          # What we cache: the Virtual ENV
-          path: venv
-          # The cache key depends on requirements.txt
-          key: ${{ runner.os }}-venv-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: ${{ runner.os }}-venv-
+      # Lint test code with flake8 in api-test
+      - name: Lint Test Code
+        run: docker-compose run --rm api-test flake8
 
-      # Build a virtual env, if it doesn't exist.
-      - name: Activate Virtual ENV
-        run: python -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-
-      - name: Run Tests
-        # Note that you have to activate the virtualenv in every step
-        run: . venv/bin/activate && pytest
-
-      - name: Lint with flake8
-        run: . venv/bin/activate && flake8
+      # Optional: Tear down and clean up containers and networks
+      - name: Clean up
+        run: docker-compose down
