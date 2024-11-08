@@ -10,6 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the code into the container
 COPY ./api /ci-cd/api
+COPY .flake8 /ci-cd/.flake8
 
 # Expose the port
 EXPOSE 8000
