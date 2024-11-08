@@ -1,14 +1,14 @@
 # Use the same base image
 FROM python:3.9-slim
 
-WORKDIR /app
+WORKDIR /tests
 
 # Copy the requirements and install them
-COPY ../requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+COPY ../requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the app and test code
-COPY . .
+COPY ./tests .
 
 # Set the command to run tests
-CMD ["pytest", "tests"]
+CMD ["pytest"]

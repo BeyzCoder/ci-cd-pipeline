@@ -3,32 +3,27 @@ version: '3.8'
 services:
   api-prod:
     build:
-      context: ./api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: api/Dockerfile
     image: my-api-prod
     container_name: api-prod
     ports:
       - "8000:8000"
-    environment:
-      # Add any environment variables needed for production
-      - ENV=production
     networks:
       - test-network
 
   api-test:
     build:
-      context: ./tests
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: tests/Dockerfile
     image: my-api-test
     container_name: api-test
     depends_on:
       - api-prod
+    volumes:
+      - ./api:/api
     networks:
       - test-network
-    environment:
-      # Add any environment variables needed for testing
-      - ENV=test
-    command: pytest tests/
 
 networks:
   test-network:
