@@ -20,8 +20,6 @@ services:
     container_name: api-test
     depends_on:
       - api-prod
-    volumes:
-      - ./api:/api
     networks:
       - test-network
 

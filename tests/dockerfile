@@ -9,6 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the app and test code
 COPY ./tests .
+COPY ./api /api
 COPY .flake8 .flake8
 
 # Set the command to run tests
