@@ -15,4 +15,4 @@ class ScrapeParams(BaseModel):
 
 class GrabParams(BaseModel):
     """Model for requesting website."""
-    PrimaryKey: str
+    symbol: str

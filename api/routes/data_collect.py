@@ -9,9 +9,9 @@ router = APIRouter()
 
 
 @router.post("/v1/scrape-statement/")
-async def collect(scrape: ScrapeParams) -> JSONResponse:
+async def collect_statement(scrape: ScrapeParams) -> JSONResponse:
     statements = scrape_statement(**scrape.__dict__)
-    response = put_item(statements)
+    response = put_item(statements, scrape.symbol)
     if response["status"] == "FAILED":
         raise HTTPException(status_code=500, detail=response["error"])
     return JSONResponse(content=response, status_code=status.HTTP_200_OK, media_type="application/json")

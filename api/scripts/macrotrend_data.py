@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from typing import Dict, List
+from decimal import Decimal
 import ast
 import re
 
@@ -55,7 +56,7 @@ def cleanse(raw_data: List[Dict]) -> Dict:
     # To be use in mapping.
     def convert_type(value: str) -> int:
         if value != "":
-            return round(float(value) * CONVERSION_MILLION, 2)
+            return Decimal(str(round(float(value) * CONVERSION_MILLION, 2)))
         return 0
 
     for criteria_info in raw_data:

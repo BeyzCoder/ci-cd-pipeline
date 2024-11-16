@@ -18,7 +18,6 @@ def scrape_statement(symbol: str, website: str) -> dict:
         raw_data = parse(html_text)
         formatted_object = cleanse(raw_data)
 
-        formatted_object["PrimaryKey": symbol]
         return formatted_object
 
     return {"Message": "The website input have no scraping script for it."}
