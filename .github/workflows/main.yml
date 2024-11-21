@@ -40,3 +40,25 @@ jobs:
       # Optional: Tear down and clean up containers and networks
       - name: Clean up
         run: docker-compose down
+
+  # Continuous-Deployment:
+  #   needs: Continuous-Integerate
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v3
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: us-east-1
+
+  #     # run aws cloudformation validate-template before pushing to validate the cloudformation.
+  #     - name: Deploy CloudFormation stack
+  #       run: |
+  #         aws cloudformation deploy \
+  #           --template-file aws-formation.yml \
+  #           --stack-name api-formation-stack \
