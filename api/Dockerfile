@@ -13,7 +13,7 @@ COPY ./api /ci-cd/api
 COPY .flake8 /ci-cd/.flake8
 
 # Expose the port
-EXPOSE 8000
+EXPOSE 80
 
 # Run the FastAPI application
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]
