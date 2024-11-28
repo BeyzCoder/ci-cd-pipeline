@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  Continuous-Integerate:
+  Continuous-Integrate:
     # Define the OS in the workflow
     runs-on: ubuntu-latest 
     steps:
@@ -44,6 +44,7 @@ jobs:
   push-image-ecr:
     name: Build and Push Specific Dockerfile to ECR
     runs-on: ubuntu-latest
+    needs: Continuous-Integrate
 
     steps:
     - name: Checkout code
@@ -82,7 +83,7 @@ jobs:
         docker push $ECR_REPOSITORY:latest
 
   Continuous-Deployment:
-    needs: Continuous-Integerate
+    needs: push-image-ecr
     runs-on: ubuntu-latest
 
     steps:

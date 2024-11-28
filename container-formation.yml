@@ -25,19 +25,19 @@ Resources:
               Protocol: tcp
 
   MyECSSecurityGroup:
-  Type: AWS::EC2::SecurityGroup
-  Properties:
-    GroupDescription: "Allow inbound traffic on ports 8000 and 80"
-    SecurityGroupIngress:
-      - CidrIp: "0.0.0.0/0"  # Allow access from anywhere for port 8000
-        FromPort: 8000
-        ToPort: 8000
-        IpProtocol: tcp
-      - CidrIp: "0.0.0.0/0"  # Allow access from anywhere for port 80 (IPv4)
-        FromPort: 80
-        ToPort: 80
-        IpProtocol: tcp
-    VpcId: !Ref VPC
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow inbound traffic on ports 8000 and 80"
+      SecurityGroupIngress:
+        - CidrIp: "0.0.0.0/0"  # Allow access from anywhere for port 8000
+          FromPort: 8000
+          ToPort: 8000
+          IpProtocol: tcp
+        - CidrIp: "0.0.0.0/0"  # Allow access from anywhere for port 80 (IPv4)
+          FromPort: 80
+          ToPort: 80
+          IpProtocol: tcp
+      VpcId: !Ref VPC
 
   ECSService:
     Type: AWS::ECS::Service
