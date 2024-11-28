@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  ECRRepositoryURI:
+    Type: String
+    Description: The URI of the existing ECR repository
+
+Resources:
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: fastapi-cluster  # This is the name of my own Cluster
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: my-task-family
+      ContainerDefinitions:
+        - Name: fastapi-container
+          Image: !Ref ECRRepositoryURI
+          Memory: 512
+          Cpu: 256
+          PortMappings:
+            - ContainerPort: 8000
+              Protocol: tcp
+
+  MyECSSecurityGroup:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+    GroupDescription: "Allow inbound traffic on ports 8000 and 80"
+    SecurityGroupIngress:
+      - CidrIp: "0.0.0.0/0"  # Allow access from anywhere for port 8000
+        FromPort: 8000
+        ToPort: 8000
+        IpProtocol: tcp
+      - CidrIp: "0.0.0.0/0"  # Allow access from anywhere for port 80 (IPv4)
+        FromPort: 80
+        ToPort: 80
+        IpProtocol: tcp
+    VpcId: !Ref VPC
+
+  ECSService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref ECSCluster
+      DesiredCount: 2
+      LaunchType: FARGATE
+      TaskDefinition: !Ref TaskDefinition
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups: [!Ref MyECSSecurityGroup] 
+          Subnets:
+            - Fn::Select:
+                - 0  # Select the first subnet from the list
+                - Fn::GetAZs: ''  # Get availability zones for the region

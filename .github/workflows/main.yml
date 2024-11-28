@@ -66,7 +66,11 @@ jobs:
         ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        docker build -t $ECR_REPOSITORY:$IMAGE_TAG -f api/Dockerfile .
+        docker build \
+          --build-arg AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+          --build-arg AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+          --build-arg AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }} \
+          -t $ECR_REPOSITORY:$IMAGE_TAG -f api/Dockerfile .
         docker tag $ECR_REPOSITORY:$IMAGE_TAG $ECR_REPOSITORY:latest
 
     - name: Push Docker image to ECR
@@ -77,24 +81,32 @@ jobs:
         docker push $ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REPOSITORY:latest
 
-  # Continuous-Deployment:
-  #   needs: Continuous-Integerate
-  #   runs-on: ubuntu-latest
+  Continuous-Deployment:
+    needs: Continuous-Integerate
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     - name: Configure AWS credentials
-  #       uses: aws-actions/configure-aws-credentials@v3
-  #       with:
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region: us-east-1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-  #     # run aws cloudformation validate-template before pushing to validate the cloudformation.
-  #     - name: Deploy CloudFormation stack
-  #       run: |
-  #         aws cloudformation deploy \
-  #           --template-file aws-formation.yml \
-  #           --stack-name api-formation-stack \
+      - name: Validate CloudFormation template
+        run: |
+          aws cloudformation validate-template --template-body file://container-formation.yml
+
+      # run aws cloudformation validate-template before pushing to validate the cloudformation.
+      - name: Deploy CloudFormation stack
+        env:
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+        run: |
+          aws cloudformation deploy \
+            --template-file aws-formation.yml \
+            --stack-name api-formation-stack \
+             --parameters ParameterKey=ECRRepositoryURI,ParameterValue=$ECR_REPOSITORY
