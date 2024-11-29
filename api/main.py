@@ -13,5 +13,5 @@ app.include_router(data_grab.router, prefix="/data-grab")
 
 @app.get("/")
 async def root() -> JSONResponse:
-    resp: dict = {"state" : "Server up running!"}
+    resp: dict = {"state" : "Server up running!!"}
     return JSONResponse(content=resp, status_code=status.HTTP_200_OK, media_type="application/json")
