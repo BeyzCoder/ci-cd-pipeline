@@ -32,7 +32,7 @@ Resources:
       RequiresCompatibilities:
         - FARGATE
       NetworkMode: awsvpc  
-      ExecutionRoleArn: arn:aws:iam::891376915812:role/LabRole
+      ExecutionRoleArn: arn:aws:iam::559651648870:role/LabRole
       ContainerDefinitions:
         - Name: fastapi-container
           Image: !Sub "${ECRRepositoryURI}:${ImageTag}"
