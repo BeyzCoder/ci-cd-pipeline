@@ -62,5 +62,5 @@ Resources:
           SecurityGroups: [!Ref MyECSSecurityGroup] 
           Subnets:
             - Fn::Select:
-                - 0  
-                - Fn::GetAZs: ''  
+                - 0  # Select the first subnet from the list
+                - Fn::GetAZs: !Ref AWS::Region  # Get availability zones for the region
