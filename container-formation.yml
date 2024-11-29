@@ -9,6 +9,10 @@ Parameters:
     Type: AWS::EC2::VPC::Id
     Description: The ID of an existing VPC
 
+  Subnet:
+    Type: String
+    Description: The Id of an existing Subnet
+
 Resources:
   ECSCluster:
     Type: AWS::ECS::Cluster
@@ -60,7 +64,4 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups: [!Ref MyECSSecurityGroup] 
-          Subnets:
-            - Fn::Select:
-                - 0  # Select the first subnet from the list
-                - Fn::GetAZs: !Ref AWS::Region  # Get availability zones for the region
+          Subnets: [!Ref Subnet]

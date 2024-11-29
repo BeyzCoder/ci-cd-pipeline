@@ -97,10 +97,12 @@ jobs:
         env:
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
           VPC_ID: ${{ secrets.VPC_ID }}
+          VPC_SUBNET_ID: ${{ secrets.VPC_SUBNET_ID }}
         run: |
           aws cloudformation deploy \
             --template-file ./container-formation.yml \
             --stack-name api-formation-stack \
             --parameter-overrides \
                 ECRRepositoryURI=$ECR_REPOSITORY \
-                VPC=$VPC_ID
+                VPC=$VPC_ID \
+                Subnet=$VPC_SUBNET_ID
