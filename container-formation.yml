@@ -5,6 +5,10 @@ Parameters:
     Type: String
     Description: The URI of the existing ECR repository
 
+  VPC:
+    Type: AWS::EC2::VPC::Id
+    Description: The ID of an existing VPC
+
 Resources:
   ECSCluster:
     Type: AWS::ECS::Cluster

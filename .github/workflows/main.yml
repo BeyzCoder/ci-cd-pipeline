@@ -106,8 +106,10 @@ jobs:
       - name: Deploy CloudFormation stack
         env:
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          VPC_ID: ${{ secrets.VPC_ID }}
         run: |
           aws cloudformation deploy \
             --template-file aws-formation.yml \
             --stack-name api-formation-stack \
-             --parameters ParameterKey=ECRRepositoryURI,ParameterValue=$ECR_REPOSITORY
+             --parameters ParameterKey=ECRRepositoryURI,ParameterValue=$ECR_REPOSITORY \
+                          ParameterKey=VPC,ParameterValue=$VPC_ID
