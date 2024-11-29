@@ -111,5 +111,6 @@ jobs:
           aws cloudformation deploy \
             --template-file aws-formation.yml \
             --stack-name api-formation-stack \
-             --parameters ParameterKey=ECRRepositoryURI,ParameterValue=$ECR_REPOSITORY \
-                          ParameterKey=VPC,ParameterValue=$VPC_ID
+            --parameter-overrides \
+                ECRRepositoryURI=$ECR_REPOSITORY \
+                VPC=$VPC_ID
