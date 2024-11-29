@@ -96,6 +96,7 @@ jobs:
       - name: Deploy CloudFormation stack
         env:
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
           VPC_ID: ${{ secrets.VPC_ID }}
           VPC_SUBNET_ID: ${{ secrets.VPC_SUBNET_ID }}
         run: |
@@ -104,5 +105,6 @@ jobs:
             --stack-name api-formation-stack \
             --parameter-overrides \
                 ECRRepositoryURI=$ECR_REPOSITORY \
+                ImageTag=$IMAGE_TAG \
                 VPC=$VPC_ID \
                 Subnet=$VPC_SUBNET_ID
