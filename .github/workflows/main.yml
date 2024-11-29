@@ -99,7 +99,7 @@ jobs:
           VPC_ID: ${{ secrets.VPC_ID }}
         run: |
           aws cloudformation deploy \
-            --template-file aws-formation.yml \
+            --template-file ./container-formation.yml \
             --stack-name api-formation-stack \
             --parameter-overrides \
                 ECRRepositoryURI=$ECR_REPOSITORY \
